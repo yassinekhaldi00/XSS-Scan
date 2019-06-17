@@ -1,22 +1,23 @@
 from scan import *
 import time
 
-
 url = input("entrez un url:")
 
 scan = scan(url)
 
-pageHtml = scan.getHtml()
+pageHtml = scan.getHtml2()
 if pageHtml != None :
     payloadList = scan.getPayloadList()
     i = 0
-    status =''
+    status ='négative'
     for line in payloadList :
+        line =  line.decode("utf-8")
+        print(line)
         if line.lower() in pageHtml.lower():
             scan.vuln.append(line)
             status = 'positive'
             scan.saveVulnLinks()
-        print('['+str(i)+']'+' test: '+line.decode("utf-8") +' ---> '+status)
+        print('['+str(i)+']'+' test: '+line +' ---> '+status)
         status = 'négative'
         i+=1
         time.sleep(0.05)
@@ -26,7 +27,7 @@ if pageHtml != None :
         print("-----------------------------------------------------------------------------------------------")
     else :
         for vul in scan.vuln :
-            print(vul.decode("utf-8"))
+            print(vul)
         print("-----------------------------------------------------------------------------------------------")
     
         
