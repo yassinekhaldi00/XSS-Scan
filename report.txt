@@ -1,6 +1,1 @@
-&lt;
-&lt
-&lt;
-&LT
-&LT;
-&lt;
+<script>alert(123);</script>

@@ -12,7 +12,6 @@ if pageHtml != None :
     status ='négative'
     for line in payloadList :
         line =  line.decode("utf-8")
-        print(line)
         if line.lower() in pageHtml.lower():
             scan.vuln.append(line)
             status = 'positive'

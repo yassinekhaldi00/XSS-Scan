@@ -21,7 +21,6 @@ class scan():
     def getHtml2(self):
         session = requests.Session()
         response = self.read_response(session, self.url)
-        print(response.text)
         return response.text
 
 
@@ -52,3 +51,21 @@ class scan():
 		# Detect a Web Application Firwall.
         return page_response
 	
+    def dection_firewall(self, response):
+        if ("4" in str(response)):
+            
+            if response.find('WebKnight') >= 0:
+                print("DEBUG", "Firewall detected: WebKnight")
+                return True
+            
+            elif response.find('Mod_Security') >= 0:
+                print("DEBUG", "Firewall detected: Mod Security")
+                return True
+            
+            elif response.find('dotDefender') >= 0:
+                print("DEBUG", "Firewall detected: Dot Defender")
+                return True
+            
+            else:
+                print("INFO", "No Firewall Present")
+                return False
