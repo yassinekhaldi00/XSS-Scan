@@ -30,7 +30,7 @@ class scan():
             self.payloadLines = [line.strip() for line in self.payload.readlines()]
             return self.payloadLines
         else :
-            print('le fichier payload n existe pas')
+            print("le fichier payload n'existe pas")
     
 
     
@@ -41,13 +41,12 @@ class scan():
             f.write(self.vuln[i] + "\n")
             i = i + 1
         f.close()
-        print("Fin.....")
+        print("Fin.")
     
     def read_response(self, session, url):
         headers = {'User-Agent': generate_user_agent(device_type="desktop", os=('mac', 'linux'))}
         # The Session object allows you to persist certain parameters across requests	
         page_response = session.get(url, headers=headers) 
-
         return page_response
 	
     def dection_firewall(self, response):

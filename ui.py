@@ -72,12 +72,25 @@ class Window(QWidget):
         self.nw.clicked.connect(self.new)
 
         self.show()
+
+        self.start = True
     
     def scn(self):
-        self.scan = scan(self.input.text())
-        pageHtml = self.scan.getHtml2()
+        if self.input.text() == '':
+            errorBox = QMessageBox.critical(self, 'Erreur, case vide!!!', 'Entrez un URL.')
+            self.start = False
+
+        elif self.input.text()[:8] != 'https://' and self.input.text()[:7] != 'http://':
+            errorBox = QMessageBox.critical(self,"Erreur, URL invalide!! ","Ajoutez https:// ou http:// au début de l'URL ")
+            self.start = False   
+
+        else:
+            self.scan = scan(self.input.text())
+            pageHtml = self.scan.getHtml2()
+            self.start = True
+
         
-        if self.scan.dection_firewall(pageHtml):
+        if self.start and self.scan.dection_firewall(pageHtml) :
             msgBox = QMessageBox.question(self,'Firewall detecté!!', ' Voulez contuniez votre scan ?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if msgBox == QMessageBox.Yes:
                 if pageHtml != None :
@@ -110,8 +123,11 @@ class Window(QWidget):
                         self.result.append("-----------------------------------------")
                         for vul in self.scan.vuln :
                             self.result.append(vul[1:])
+                
+                else: 
+                    errorBox = QMessageBox.critical(self, 'Erreur, URL invalid!!', 'Entrez un URL valid.')
             
-        else:
+        elif self.start:
             if pageHtml != None :
 
                 if self.lightScan.isChecked():
@@ -142,6 +158,9 @@ class Window(QWidget):
                     self.result.append("-----------------------------------------")
                     for vul in self.scan.vuln :
                         self.result.append(vul[1:])
+            
+            else:
+                errorBox = QMessageBox.critical(self, 'Erreur, URL invalid!!', 'Entrez un URL valid.')
         
 
     
