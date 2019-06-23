@@ -7,7 +7,7 @@ scan = scan(url)
 
 pageHtml = scan.getHtml2()
 if pageHtml != None :
-    payloadList = scan.getPayloadList()
+    payloadList = scan.getPayloadList("payload.txt")
     i = 0
     status ='négative'
     for line in payloadList :

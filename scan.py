@@ -24,9 +24,9 @@ class scan():
         return response.text
 
 
-    def getPayloadList(self):
-        if os.path.isfile("payload.txt") :
-            self.payload = open("payload.txt",'rb')
+    def getPayloadList(self, payl):
+        if os.path.isfile(payl) :
+            self.payload = open(payl,'rb')
             self.payloadLines = [line.strip() for line in self.payload.readlines()]
             return self.payloadLines
         else :
@@ -48,7 +48,6 @@ class scan():
         # The Session object allows you to persist certain parameters across requests	
         page_response = session.get(url, headers=headers) 
 
-		# Detect a Web Application Firwall.
         return page_response
 	
     def dection_firewall(self, response):

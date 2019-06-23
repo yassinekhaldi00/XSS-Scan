@@ -30,6 +30,17 @@ class Window(QWidget):
         self.result.setReadOnly(True)
         self.result.setFixedHeight(100)
 
+        self.scanChoice = QGroupBox()
+        self.lightScan = QRadioButton("Light scan")
+        self.fullScan = QRadioButton("Full scan")
+        self.lightScan.setChecked(True)
+
+        h3_box = QHBoxLayout()
+        h3_box.addStretch()
+        h3_box.addWidget(self.lightScan)
+        h3_box.addWidget(self.fullScan)
+        h3_box.addStretch()
+
         h_box = QHBoxLayout()
         h_box.addStretch()
         h_box.addWidget(self.l)
@@ -49,6 +60,7 @@ class Window(QWidget):
 
         v_box = QVBoxLayout()
         v_box.addLayout(h_box)
+        v_box.addLayout(h3_box)
         v_box.addLayout(h1_box)
         v_box.addWidget(self.message)
         v_box.addLayout(h2_box)
@@ -69,7 +81,12 @@ class Window(QWidget):
             msgBox = QMessageBox.question(self,'Firewall detecté!!', ' Voulez contuniez votre scan ?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if msgBox == QMessageBox.Yes:
                 if pageHtml != None :
-                    payloadList = self.scan.getPayloadList()
+
+                    if self.lightScan.isChecked:
+                        payloadList = self.scan.getPayloadList("payload.txt")
+                    else:
+                        payloadList = self.scan.getPayloadList("payload2.txt")
+                    
                     i = 0
                     status ='négative'
 
@@ -89,12 +106,19 @@ class Window(QWidget):
                         self.result.append("Aucun XSS attaque n'est trouvé")
 
                     else :
+                        self.result.append("resultats: "+len(self.scan.vuln))
+                        self.result.append("-----------------------------------------")
                         for vul in self.scan.vuln :
-                            self.result.append(vul)
+                            self.result.append(vul[1:])
             
         else:
             if pageHtml != None :
-                payloadList = self.scan.getPayloadList()
+
+                if self.lightScan.isChecked():
+                    payloadList = self.scan.getPayloadList("payload.txt")
+                else:
+                    payloadList = self.scan.getPayloadList("payload2.txt")
+
                 i = 0
                 status ='négative'
 
@@ -106,16 +130,18 @@ class Window(QWidget):
                         status = 'positive'
                         self.scan.saveVulnLinks()
 
-                    self.message.append('['+str(i)+']'+' test: '+line +' ---> '+status)
+                    self.message.append('['+str(i)+']'+' test:  '+line +' ---> '+status)
                     status = 'négative'
                     i+=1
 
                 if len(self.scan.vuln) == 0:
-                    self.result.append('aucun XSS attaque n est trouvé')
+                    self.result.append("Aucun XSS attaque n'est trouvé")
 
                 else :
+                    self.result.append("resultats: "+str(len(self.scan.vuln))+" injections")
+                    self.result.append("-----------------------------------------")
                     for vul in self.scan.vuln :
-                        self.result.append(vul)
+                        self.result.append(vul[1:])
         
 
     
